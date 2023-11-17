@@ -14,10 +14,23 @@ __0. Preparation__
 * clone this repository `git clone https://github.com/rocksclusters/roll-server.git`
 * download the roll isos from UCSD.
 
+If not already done setup up an Apache web server (here on CentOS 7) as described in https://www.digitalocean.com/community/tutorials/how-to-install-the-apache-web-server-on-centos-7:
+
+```bash
+yum update httpd
+yum install httpd
+firewall-cmd --permanent --add-service=http
+firewall-cmd --permanent --add-service=https
+firewall-cmd --reload
+systemctl start httpd
+systemctl enable httpd.service
+```
+
 __I. Copy Roll(s) to a web directory__
 For this example, will assume the `/var/www/html/rocks/7.0`  is the (already created) parent directory into 
 which you want to copy rolls.  The `rollcopy.sh` script will create the subdirectory `install/rolls`.
 to copy the iso file, `CentOS-7.4.1708-0.x86_64.disk1.iso` to the the release directory:
+
 ```
 # rollcopy.sh CentOS-7.4.1708-0.x86_64.disk1.iso /var/www/html/rocks/7.0
 ```
@@ -139,8 +152,10 @@ __VII. Other items to check__
 The following may need to be checked/changed for your setup:
 
 * Firewall needs modifying on your web server to allow http access (platform sepcific)
+* SELinux may need to be modified or turned off (e.g., ```setenforce Permissive```) or edit `/etc/sysconfig/selinux` directly:
 
-* SELinux may need to be modified or turned off (e.g., ```setenforce Permissive```)
+```bash
+SELINUX=permissive
+```
 
-
-
+This change requires a reboot.
